@@ -127,3 +127,162 @@ assign ALUResultM = alu_result_r;
 assign WriteDataM = RD2E;
 
 endmodule
+
+
+//**********************************************************************************************************************//
+
+//*************************************          MUX          **********************************************************//
+
+//**********************************************************************************************************************//
+
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 05.06.2025 21:23:24
+// Design Name: 
+// Module Name: MUX
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module Mux(a,b,s,out);
+input [31:0] a,b;
+input s;
+output [31:0] out;
+
+assign out = (!s) ? a : b;
+
+endmodule
+
+
+//**********************************************************************************************************************//
+
+//*************************************        PC_ADDER       **********************************************************//
+
+//**********************************************************************************************************************//
+
+
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 02.06.2025 23:50:59
+// Design Name: 
+// Module Name: pc_adder
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module pc_adder(a,b,sum);
+input [31:0] a,b;
+output [31:0] sum;
+
+assign sum = a+b;
+endmodule
+
+
+//**********************************************************************************************************************//
+
+//*************************************          ALU          **********************************************************//
+
+//**********************************************************************************************************************//
+
+
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 28.05.2025 22:33:46
+// Design Name: 
+// Module Name: ALU
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module alu ( A, B, RESULT, ALUcontrol, N,Z,V,C,PF);
+input [31:0] A,B;
+input [2:0] ALUcontrol;
+output [31:0] RESULT;
+output N,Z,C,V,PF;
+
+wire [31:0] a_and_b, a_or_b;
+wire  [31:0]not_b;
+wire [31:0] a_xor_b;
+wire [31:0] mux1;
+wire [31:0] sum;
+wire carry_out;
+wire [31:0] mux2;
+wire [31:0] slt;
+wire [31:0] sll;
+wire [31:0] srl;
+
+
+assign a_and_b = A & B;
+assign a_or_b = A | B;
+assign not_b = ~B;
+assign a_xor_b = A ^ B;
+
+assign mux1 = (ALUcontrol[0]==1'b0)? B : not_b; 
+
+assign {carry_out, sum} = A + mux1 + ALUcontrol[0];
+
+assign slt = {31'b0000000000000000000000000000000 , sum[31]};
+
+assign sll = A << B[4:0];
+
+assign srl = A >> B[4:0];
+
+assign mux2 = (ALUcontrol[2:0]==3'b000) ? sum:
+              (ALUcontrol[2:0]==3'b001) ? sum:  
+              (ALUcontrol[2:0]==3'b010) ? a_and_b:
+              (ALUcontrol[2:0]==3'b011) ? a_or_b:
+              (ALUcontrol[2:0]==3'b100) ? a_xor_b:
+              (ALUcontrol[2:0]==3'b101) ? slt:
+              (ALUcontrol[2:0]==3'b110) ? sll: srl;
+
+assign RESULT = mux2;
+
+assign Z = &(~RESULT);
+assign PF= ^(RESULT);
+assign N = (ALUcontrol[2]==1'b0)? RESULT[31]: 1'b0;
+assign C = carry_out & (~ALUcontrol[2]);
+assign V = (ALUcontrol[2:0] == 3'b000) ? ((A[31] == B[31]) & (A[31] != sum[31])) :
+           (ALUcontrol[2:0] == 3'b001) ? ((A[31] != B[31]) & (A[31] != sum[31])) :
+           (ALUcontrol[2:0] == 3'b010) ? (A == 32'h7FFFFFFF) :
+           (ALUcontrol[2:0] == 3'b011) ? (A == 32'h80000000) :
+           1'b0;
+endmodule
