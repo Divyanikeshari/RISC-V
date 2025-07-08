@@ -147,3 +147,275 @@ assign PCPlus4E = PCPlus4D;
 endmodule
 
 
+//**********************************************************************************************************************//
+
+//*************************************     CONTROL_UNIT      **********************************************************//
+
+//**********************************************************************************************************************//
+
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 03.06.2025 00:45:35
+// Design Name: 
+// Module Name: Control_Unit
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module control_unit(Zero, op, funct3, funct7_5, PCSrc, ResultSrc, MemWrite, ALUSrc, ImmSrc, RegWrite,ALUOp, ALUControl);
+input Zero, funct7_5;
+input [6:0] op;
+input [2:0] funct3;
+
+output PCSrc, ResultSrc, MemWrite, ALUSrc, RegWrite;
+output [1:0] ImmSrc, ALUOp;
+output [2:0] ALUControl; 
+
+
+wire [1:0] aluop;
+wire Branch;
+
+main_decoder main_decoder_module(
+                            .Zero(Zero), 
+                            .op(op),
+                            .Branch(Branch), 
+                            .ResultSrc(ResultSrc), 
+                            .MemWrite(MemWrite),
+                            .ALUSrc(ALUSrc),
+                            .ImmSrc(ImmSrc), 
+                            .RegWrite(RegWrite), 
+                            .ALUOp(aluop)
+                            );
+
+ALU__Decoder alu_decoder_module (
+                                .op_5(op[5]), 
+                                .funct3(funct3), 
+                                .funct7_5(funct7_5), 
+                                .ALUOp(aluop), 
+                                .ALUControl(ALUControl)
+                                );
+
+assign PCSrc = Branch & Zero;
+
+endmodule
+
+
+//*************************************     MAIN_DECODER      **********************************************************//
+
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 01.06.2025 10:48:30
+// Design Name: 
+// Module Name: main_decoder
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module main_decoder(Zero, op, Branch, ResultSrc, MemWrite,ALUSrc,ImmSrc, RegWrite, ALUOp);
+input Zero;
+input [6:0] op;
+output RegWrite, ALUSrc, MemWrite, ResultSrc, Branch;
+output [1:0] ImmSrc, ALUOp;
+
+wire [31:0] PCSrc; 
+
+assign RegWrite = ((op == 7'b0000011) | (op == 7'b0110011)) ? 1'b1 : 1'b0;
+assign ALUSrc = ((op == 7'b0000011) | (op == 7'b0100011)) ? 1'b1 : 1'b0;
+assign MemWrite = (op == 7'b0100011) ? 1'b1 : 1'b0;
+assign ResultSrc = (op == 7'b0000011) ? 1'b1 : 1'b0;
+assign Branch = (op == 7'b1100011) ? 1'b1 : 1'b0;
+assign ImmSrc = (op == 7'b0100011) ? 2'b01 : (op == 7'b1100011) ? 2'b10 :2'b00;
+assign ALUOp = (op == 7'b0110011) ? 2'b10 : (op == 7'b1100011) ? 2'b01 : 2'b00;
+
+assign PCSrc = Zero & Branch;
+ 
+endmodule
+
+
+//*************************************     ALU_DECODER      **********************************************************//
+
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 01.06.2025 12:28:32
+// Design Name: 
+// Module Name: ALU_Decoder
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module ALU__Decoder(op_5, funct3, funct7_5, ALUOp, ALUControl);
+input op_5;
+input [2:0] funct3;
+input funct7_5;
+input [1:0] ALUOp;
+output reg [2:0] ALUControl;
+
+wire [1:0] concatenation;
+
+assign concatenation = {op_5 , funct7_5};
+
+
+always @(*) begin
+    case (ALUOp)
+      2'b00: ALUControl = 3'b000;  // ADD for load/store
+      2'b01: ALUControl = 3'b001;  // SUB for BEQ
+      2'b10: begin
+        case (funct3)
+          3'b000: ALUControl = (concatenation == 2'b11) ? 3'b001 : 3'b000; // ADD or SUB
+          3'b111: ALUControl = 3'b010; // AND
+          3'b110: ALUControl = 3'b011; // OR
+          3'b100: ALUControl = 3'b100; // XOR
+          3'b010: ALUControl = 3'b101; // SLT
+          3'b001: ALUControl = 3'b110; // SLL
+          3'b101: ALUControl = 3'b111; // SRL
+          default: ALUControl = 3'b000;
+        endcase
+      end
+      default: ALUControl = 3'b000;
+    endcase
+  end
+endmodule
+
+
+//**********************************************************************************************************************//
+
+//*************************************    REGISTER_MEMORY    **********************************************************//
+
+//**********************************************************************************************************************//
+
+
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 02.06.2025 15:28:25
+// Design Name: 
+// Module Name: Register_File
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module register_file(A1, A2, A3, WE3, WD3, CLK, RST, RD1, RD2);
+input [4:0] A1, A2, A3;
+input CLK,RST;
+input WE3;
+input [31:0] WD3;
+output [31:0] RD1, RD2;
+
+reg [31:0] mem [31:0];
+
+assign RD1 = (RST == 1'b1) ? mem[A1] : 32'b00000000;
+assign RD2 = (RST == 1'b1) ? mem[A2] : 32'b00000000;
+
+always @(posedge CLK)
+    begin
+    if (WE3 == 1'b1)
+        begin
+        mem[A3] <= WD3;
+        end
+    end
+ 
+initial begin
+    mem [9] = 32'h00000020;
+    mem [6] = 32'h00000021;
+    mem [28] = 32'h00000022;
+    mem [8] = 32'h00000023;
+    mem [7] = 32'h00000024;
+    mem [4] = 32'h00000025;
+    mem [5] = 32'h00000025;
+end
+
+endmodule
+
+
+//**********************************************************************************************************************//
+
+//*************************************     SIGN EXTENSION    **********************************************************//
+
+//**********************************************************************************************************************//
+
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 02.06.2025 23:59:24
+// Design Name: 
+// Module Name: Sign_Extension
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module Sign_extension(in, out, ImmSrc);
+input [31:0] in;
+input ImmSrc;
+output reg [31:0] out;
+
+always @(*) begin
+    if (ImmSrc == 1'b1)
+        out <= {{20{in[31]}}, in[31:25], in[11:7]}; 
+    else
+        out <= {{20{in[31]}}, in[31:20]};           
+end
+
+endmodule
