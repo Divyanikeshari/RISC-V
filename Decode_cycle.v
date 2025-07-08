@@ -1,3 +1,7 @@
+// This page include code for decode cyle inculding all the module instantiate with it
+// Please find the associated module below the main module of decode cycle
+
+
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
