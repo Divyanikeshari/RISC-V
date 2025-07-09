@@ -1,0 +1,45 @@
+The output in the console is, including the values in the corresponding registers :
+Time resolution is 1 ps
+    PC   |   Instr   | Reg1 | Reg2 | Reg_Out |
+00000000	00000000	 0  	 0		 0
+00000000	ffc4a303	 9  	28		 6
+00000004	00832383	 6  	 8		 7
+00000008	00736233	 6  	 7		 4
+0000000c	fe44ae23	 9  	 4		28
+00000010	xxxxxxxx	 x  	 x		 x
+00000014	xxxxxxxx	 x  	 x		 x
+00000018	xxxxxxxx	 x  	 x		 x
+xxxxxxxx	xxxxxxxx	 x  	 x		 x
+---- Register File Contents ----
+x0 = xxxxxxxx
+x1 = xxxxxxxx
+x2 = xxxxxxxx
+x3 = xxxxxxxx
+x4 = 00000025
+x5 = 00000025
+x6 = 000000f0
+x7 = f00000f0
+x8 = 00000023
+x9 = 00000020
+x10 = xxxxxxxx
+x11 = xxxxxxxx
+x12 = xxxxxxxx
+x13 = xxxxxxxx
+x14 = xxxxxxxx
+x15 = xxxxxxxx
+x16 = xxxxxxxx
+x17 = xxxxxxxx
+x18 = xxxxxxxx
+x19 = xxxxxxxx
+x20 = xxxxxxxx
+x21 = xxxxxxxx
+x22 = xxxxxxxx
+x23 = xxxxxxxx
+x24 = xxxxxxxx
+x25 = xxxxxxxx
+x26 = xxxxxxxx
+x27 = xxxxxxxx
+x28 = 00000022
+x29 = xxxxxxxx
+x30 = xxxxxxxx
+x31 = xxxxxxxx
