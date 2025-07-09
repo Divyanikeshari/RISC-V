@@ -63,8 +63,8 @@ end
 
 
  initial begin
-    $monitor("%d\t%h\t%h\t%d\t%d\t%d", 
-         cycle,
+    $display("    PC   |   Instr   | Reg1 | Reg2 | Reg_Out |");
+    $monitor("%h\t%h\t%d  \t%d\t\t%d", 
          dut.PCD,
          dut.InstrD,
          dut.decode_block.Rs1D_out,
