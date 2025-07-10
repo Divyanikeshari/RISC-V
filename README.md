@@ -16,6 +16,13 @@ A five-stage pipelined architecture consisting of the stages:
 
 **WB**: Write Back
 
+# 📂 Architecture Diagrams
+Pipelined Architecture (Implemented and modified based on the single-cycle design)
+
+Pipeline registers: IF/ID, ID/EX, EX/MEM, MEM/WB
+
+![Risc-v architecture]()
+
 ## 📊 Simulation Results
 
 The waveform below shows the output waveform of the some instruction implemented on the risc-v processor:
