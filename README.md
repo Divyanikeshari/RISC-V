@@ -20,5 +20,9 @@ A five-stage pipelined architecture consisting of the stages:
 
 The waveform below shows the output waveform of the some instruction implemented on the risc-v processor:
 Instructuctions: 
+FFC4A303: LW X6, -4(X9);
+00832383: LW X7, 8(X6);
+00736233: OR X4, X6, X7;
+FE44AE23: SW X4, -4(X9);
 
 ![Risc-v waveform]()
