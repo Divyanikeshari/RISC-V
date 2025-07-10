@@ -4,14 +4,9 @@ This project is an implementation of a pipelined RISC-V single-core processor, d
 
 It includes:
 
-A five-stage pipelined architecture consisting of the stages:
-
-IF: Instruction Fetch
-
-ID: Instruction Decode / Register Fetch
-
-EX: Execute / ALU Operations
-
-MEM: Memory Access
-
-WB: Write Back
+A_ five-stage_ pipelined architecture consisting of the stages:
+**IF**: Instruction Fetch
+**ID**: Instruction Decode / Register Fetch
+**EX**: Execute / ALU Operations
+**MEM**: Memory Access
+**WB**: Write Back
