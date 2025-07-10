@@ -254,7 +254,6 @@ initial
 begin
 instruct_mem [0] = 32'hFFC4A303;
 instruct_mem [4] = 32'h00832383;
-instruct_mem [8] = 32'h007302B3;
 instruct_mem [8] = 32'h00736233;
 instruct_mem [12] = 32'hFE44AE23;
 
