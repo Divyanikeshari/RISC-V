@@ -21,7 +21,7 @@ Pipelined Architecture (Implemented and modified based on the single-cycle desig
 
 Pipeline registers: IF/ID, ID/EX, EX/MEM, MEM/WB
 
-![Risc-v architecture](RISC-v pipeline microarchitecture)
+![Risc-v waveform](Risc_v_waveform1.png)
 
 ## 📊 Simulation Results
 
