@@ -25,4 +25,4 @@ FFC4A303: LW X6, -4(X9);
 00736233: OR X4, X6, X7;
 FE44AE23: SW X4, -4(X9);
 
-![Risc-v waveform]()
+![Risc-v waveform](Risc_v_waveform1.png)
