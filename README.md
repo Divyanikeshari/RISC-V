@@ -15,3 +15,10 @@ A five-stage pipelined architecture consisting of the stages:
 **MEM**: Memory Access
 
 **WB**: Write Back
+
+## 📊 Simulation Results
+
+The waveform below shows the output waveform of the some instruction implemented on the risc-v processor:
+Instructuctions: 
+
+![Risc-v waveform]()
