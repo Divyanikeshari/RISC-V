@@ -27,26 +27,24 @@
 module Execute_cycle(clk, rst, RD1E, RD2E, PCE, RdE, ImmExtE, PCPlus4E, 
                     RegWriteE, MemWriteE, ALUSrcE, ALUControlE, ResultSrcE, 
                     PCSrcE, PCTargetE, PCPlus4M, ALUResultM, WriteDataM,
-                    RdM, ResultSrcM, RegWriteM, MemWriteM);
+                    RdM, ResultSrcM, RegWriteM, MemWriteM, 
+                    ReadDataW, Rs1E, Rs2E, ForwardAE, ForwardBE, ResultW, RD_result_M);
 
 input clk, rst;
 input [31:0] RD1E, RD2E, ImmExtE,PCE,PCPlus4E;
 input RegWriteE, MemWriteE, ALUSrcE, ResultSrcE;
 input [2:0] ALUControlE;
 input [4:0] RdE;
-//input [4:0] Rs1E, Rs2E;
-//input [31:0] ResultW;
-//input [1:0] ForwardAE, ForwardBE; 
-
+input [4:0] Rs1E, Rs2E;
+input [31:0] ReadDataW, ResultW, RD_result_M;
+input [1:0] ForwardAE, ForwardBE; 
 
 output [31:0] PCTargetE, PCSrcE;
 output RegWriteM, MemWriteM, ResultSrcM;
 output [4:0] RdM;
 output [31:0] PCPlus4M, ALUResultM, WriteDataM;
- 
 
-
-wire [31:0] SrcBE, alu_result, SrcAE, mux3_mux2; 
+wire [31:0] SrcBE, alu_result, SrcAE, mux3_mux2, ForwardAE2; 
 wire ZeroE;
 
 reg RegWriteE_r, MemWriteE_r;
@@ -54,27 +52,34 @@ reg [1:0] ResultSrcE_r;
 reg [4:0] RdE_r;
 reg [31:0] PCPlus4E_r, alu_result_r, RD2E_r;
 
+Mux mux_2x1_ForwardAE2(
+        .a(ALUResultM),
+        .b(RD_result_M),
+        .s(ResultSrcM),
+        .out(ForwardAE2)
+        );
 
-//mux3x1 mux_3x1_a(
-//                .a(RD1E),
-//                .b(ResultW),
-//                .c(ALUResultM),
-//                .s(ForwardAE),
-//                .out(SrcAE)
-//                );
+
+mux3x1 mux_3x1_a(
+                .a(RD1E),
+                .b(ResultW),
+                .c(ForwardAE2),
+                .s(ForwardAE),
+                .out(SrcAE)
+                );
                 
                 
-//mux3x1 mux_3x1_b(
-//                .a(RD2E),
-//                .b(ResultW),
-//                .c(ALUResultM),
-//                .s(ForwardBE),
-//                .out(mux3_mux2)
-//                );
+mux3x1 mux_3x1_b(
+                .a(RD2E),
+                .b(ResultW),
+                .c(ForwardAE2),
+                .s(ForwardBE),
+                .out(mux3_mux2)
+                );
 
 
 Mux mux_2x1(
-        .a(RD2E),
+        .a(mux3_mux2),
         .b(ImmExtE),
         .s(ALUSrcE),
         .out(SrcBE)
@@ -89,7 +94,7 @@ pc_adder adder(
 
 
 alu  alu_block(
-                .A(RD1E), 
+                .A(SrcAE), 
                 .B(SrcBE), 
                 .RESULT(alu_result), 
                 .ALUcontrol(ALUControlE), 
@@ -118,7 +123,7 @@ always @ (posedge clk or negedge rst) begin
         RdE_r <= RdE;
         PCPlus4E_r <= PCPlus4E; 
         alu_result_r <= alu_result;
-        RD2E_r <= RD2E;
+        RD2E_r <= mux3_mux2;
     end
 end
 
@@ -128,7 +133,7 @@ assign ResultSrcM = ResultSrcE_r;
 assign RdM = RdE_r;
 assign PCPlus4M = PCPlus4E_r;
 assign ALUResultM = alu_result_r;
-assign WriteDataM = RD2E;
+assign WriteDataM = RD2E_r;
 
 endmodule
 
@@ -169,6 +174,48 @@ output [31:0] out;
 assign out = (!s) ? a : b;
 
 endmodule
+
+
+//**********************************************************************************************************************//
+
+//*************************************       MUX(3X1)        **********************************************************//
+
+//**********************************************************************************************************************//
+
+
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 13.06.2025 01:44:55
+// Design Name: 
+// Module Name: Hazard_Unit
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module mux3x1 (a,b,c,s,out);
+input [31:0] a,b,c;
+input [1:0] s;
+output wire [31:0] out;
+
+assign out = (s == 2'b00) ? a :
+             (s == 2'b01) ? b : 
+             (s == 2'b10) ? c : 32'h00000000;
+
+endmodule
+
 
 
 //**********************************************************************************************************************//
