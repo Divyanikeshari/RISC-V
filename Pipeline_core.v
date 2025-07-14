@@ -26,7 +26,7 @@ input clk, rst;
 output wire [31:0] PCF, InstrD; 
 
 
-wire [31:0] PCTargetE, PCSrcE, InstrD, PCD, PCPlus4D, ResultW, RD1_E, RD2_E, ImmExtE,PCPlus4M,
+wire [31:0] PCTargetE, PCSrcE, PCD, PCPlus4D, ResultW, RD1_E, RD2_E, ImmExtE,PCPlus4M,
             PCPlus4E,PCE, ALUResultM, WriteDataM, ALUResultW, ReadDataW, PCPlus4W;
 wire RegWriteW, MemWriteE, ALUSrcE, RegWriteE, RegWriteM;
 wire [1:0] ResultSrcE, ResultSrcM, ResultSrcW, ForwardAE, ForwardBE;
