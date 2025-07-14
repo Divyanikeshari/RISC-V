@@ -23,7 +23,7 @@ Pipelined Architecture (Implemented and modified based on the single-cycle desig
 Pipeline registers: IF/ID, ID/EX, EX/MEM, MEM/WB
 
 Hazard mitigation through signal forwarding and control signal propagation.
-![Risc-v waveform](RISCV_Pipelined_waveform.png)
+![Risc-V Pipelined Architecture](Risc-V_Pipelined_Architecture.png)
 
 
 
