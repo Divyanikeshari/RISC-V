@@ -99,7 +99,7 @@ assign RD = (WE == 1'b0)? data_mem[A] : 32'h00000000;
 
 //write operation
     
-    always @(posedge CLK or posedge RST) begin
+  always @(posedge CLK or negedge RST) begin
         if (!RST) begin
             data_mem [A] <=32'h00000000; 
         end else if (WE) begin
