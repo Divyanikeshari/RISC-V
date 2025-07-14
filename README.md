@@ -16,6 +16,12 @@ A five-stage pipelined architecture consisting of the stages:
 
 **WB**: Write Back
 
+##Architecture Diagrams
+Pipelined Architecture (Implemented and modified based on the single-cycle design)
+
+Pipeline registers: IF/ID, ID/EX, EX/MEM, MEM/WB
+
+Hazard mitigation through signal forwarding and control signal propagation.
 
 ## 📊 Simulation Results
 
