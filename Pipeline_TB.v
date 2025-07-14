@@ -42,19 +42,10 @@ always
 always @(posedge clk) begin
     if (rst) cycle <= cycle + 1;
 end 
-    
-initial begin
-    rst = 1'b0;
-    #100;
-    rst = 1'b1;
-    #900;
-    $finish;
-
-end
 
 integer i;
 initial begin
-    #900;  // After enough time for instructions to execute
+    #1300;  // After enough time for instructions to execute
     $display("---- Register File Contents ----");
     for (i = 0; i < 32; i = i + 1) begin
         $display("x%0d = %h", i, dut.decode_block.reg_file.mem[i]);
@@ -72,6 +63,12 @@ end
          dut.decode_block.RdD_out);
 
 end
+initial begin
+    rst = 1'b0;
+    #100;
+    rst = 1'b1;
+    #1300;
+    $finish;
 
-
+end
 endmodule
