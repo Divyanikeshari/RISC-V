@@ -6,20 +6,24 @@ Time resolution is 1 ps
 00000004	00832383	 6  	 8		 7
 00000008	00736233	 6  	 7		 4
 0000000c	fe44ae23	 9  	 4		28
-00000010	xxxxxxxx	 x  	 x		 x
-00000014	xxxxxxxx	 x  	 x		 x
-00000018	xxxxxxxx	 x  	 x		 x
+00000010	ffc4a183	 9  	28		 3
+00000014	007302b3	 6  	 7		 5
+00000018	00532423	 6  	 5		 8
+0000001c	00832103	 6  	 8		 2
+00000020	xxxxxxxx	 x  	 x		 x
+00000024	xxxxxxxx	 x  	 x		 x
+00000028	xxxxxxxx	 x  	 x		 x
 xxxxxxxx	xxxxxxxx	 x  	 x		 x
 ---- Register File Contents ----
 x0 = xxxxxxxx
 x1 = xxxxxxxx
-x2 = xxxxxxxx
-x3 = xxxxxxxx
-x4 = 00000025
-x5 = 00000025
+x2 = f000019c
+x3 = f00000fc
+x4 = f00000fc
+x5 = f000019c
 x6 = 000000f0
-x7 = f00000f0
-x8 = 00000023
+x7 = f00000ac
+x8 = xxxxxxxx
 x9 = 00000020
 x10 = xxxxxxxx
 x11 = xxxxxxxx
@@ -39,7 +43,8 @@ x24 = xxxxxxxx
 x25 = xxxxxxxx
 x26 = xxxxxxxx
 x27 = xxxxxxxx
-x28 = 00000022
+x28 = xxxxxxxx
 x29 = xxxxxxxx
 x30 = xxxxxxxx
 x31 = xxxxxxxx
+$finish called at time : 1400 ns : File "C:/Users/hp/multiprocessor/multiprocessor.srcs/sim_1/new/Pipiline_tb.v" Line 71
