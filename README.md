@@ -23,13 +23,21 @@ The waveform below shows the output waveform of the some instruction implemented
 
 Instructuctions: 
 
-**FFC4A303**: LW X6, -4(X9);
+FFC4A303 → LW X6, -4(X9)
 
-**00832383**: LW X7, 8(X6);
+00832383 → LW X7, 8(X6)
 
-**00736233**: OR X4, X6, X7;
+00736233 → OR X4,X6,X7
 
-**FE44AE23**: SW X4, -4(X9);
+FE44AE23 → SW X4, -4(X9)
+
+FFC4A183 → LW X3,-4(X9)
+
+007302B3 → ADD X5,X6,X7
+
+00532423 → SW X5, 8(X6)
+
+00832103 → LW X2, 8(X6)
 
 ![Risc-v waveform](RISCV_Pipelined_waveform.png)
 
