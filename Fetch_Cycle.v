@@ -248,16 +248,16 @@ reg [31:0]instruct_mem [1023:0];
 
 assign RD = rst ? instruct_mem[A] : 32'h00000000;
 
-
-
 initial 
 begin
-instruct_mem [0] = 32'hFFC4A303;
-instruct_mem [4] = 32'h00832383;
-instruct_mem [8] = 32'h00736233;
-instruct_mem [12] = 32'hFE44AE23;
-
+instruct_mem [0] = 32'hFFC4A303; // LW X6, -4(X9) 
+instruct_mem [4] = 32'h00832383; // LW X7, 8(X6)
+instruct_mem [8] = 32'h00736233; // OR X4,X6,X7
+instruct_mem [12] = 32'hFE44AE23; // SW X4, -4(X9)
+instruct_mem [16] = 32'hFFC4A183; // LW X3,-4(X9)
+instruct_mem [20] = 32'h007302B3; // ADD X5,X6,X7
+instruct_mem [24] = 32'h00532423; // SW X5, 8(X6)
+instruct_mem [28] = 32'h00832103; // LW X2, 8(X6)
 end
-
 
 endmodule
