@@ -41,7 +41,6 @@ wire [31:0] RD_result_M;
 reg [31:0] RD_result_M_r, PCPlus4M_r, ALUResultM_r;
 reg RegWriteM_r, ResultSrcM_r;
 reg [4:0] RdM_r;
-//reg [31:0] RD_result_M_d;
 
 Data_memory data_mem_block (
                             .A(ALUResultM), 
@@ -51,15 +50,6 @@ Data_memory data_mem_block (
                             .WE(MemWriteM), 
                             .RD(RD_result_M)
                             );
-
-//always @(posedge clk or negedge rst) begin
-//    if (!rst) begin
-//        RD_result_M_d <= 32'b0;
-//    end else begin
-//        RD_result_M_d <= RD_result_M;  // 1-cycle delayed
-//    end
-//end
-
 
 always @ (posedge clk or negedge rst) begin
     if (rst ==1'b0) begin
@@ -87,7 +77,6 @@ assign ReadDataW = RD_result_M_r;
 assign RdW = RdM_r;
 assign PCPlus4W = PCPlus4M_r;
 
-
 endmodule
 
 
@@ -103,24 +92,25 @@ module Data_memory(A, WD, CLK, RST, WE, RD);
     output [31:0] RD;
 
     reg [31:0] data_mem [1023:0];
-
+    integer i;
+ //Read operation
    
 assign RD = (WE == 1'b0)? data_mem[A] : 32'h00000000;
 
-
+//write operation
     
     always @(posedge CLK or posedge RST) begin
-        if (RST) begin
+        if (!RST) begin
             data_mem [A] <=32'h00000000; 
         end else if (WE) begin
             data_mem[A] <= WD;
         end
     end
 
-    initial begin
+initial begin
         data_mem[28] = 32'h000000F0;
-        data_mem[41] = 32'hF00000F0;
-        data_mem[37] = 32'hF00000FA;
-        data_mem[69] = 32'hF00000FC;
+        data_mem[27] = 32'h000000F1;
+        data_mem[248] = 32'hF00000AC;
     end
+    
 endmodule
