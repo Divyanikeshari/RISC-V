@@ -31,5 +31,5 @@ Instructuctions:
 
 **FE44AE23**: SW X4, -4(X9);
 
-![Risc-v waveform](Risc_v_waveform1.png)
-![Risc-v waveform](Risc_v_waveform2.png)
+![Risc-v waveform](RISCV_Pipelined_waveform.png)
+
