@@ -26,7 +26,8 @@
 
 module Decode_Cycle(clk, rst, InstrD, PCD, PCPlus4D,RegWriteW, RDW, ResultW,
                      ZeroE, ResultSrcE, MemWriteE, ALUSrcE, RegWriteE, 
-                     PCSrcE, ALUControlE, RD1_E, RD2_E, ImmExtE,RdE, PCPlus4E, PCE, Rs1D_out, Rs2D_out, RdD_out);
+                     PCSrcE, ALUControlE, RD1_E, RD2_E, ImmExtE,RdE, PCPlus4E, 
+                     PCE, Rs1E, Rs2E,Rs1D_out, Rs2D_out, RdD_out);
 
 input [31:0] InstrD, PCD, PCPlus4D, RDW, ResultW;
 input clk, rst, RegWriteW, ZeroE;
@@ -36,8 +37,7 @@ output [2:0] ALUControlE;
 output [31:0] RD1_E, RD2_E, ImmExtE, PCPlus4E, PCE;
 output [4:0] RdE; 
 output [4:0] Rs1D_out, Rs2D_out, RdD_out;
-
-//output [4:0] Rs1E, Rs2E;
+output [4:0] Rs1E, Rs2E;
 
 
 wire ResultSrcD, MemWriteD, ALUSrcD, RegWriteD, PCSrcD;
@@ -45,8 +45,6 @@ wire [2:0] ALUControlD;
 wire [1:0] ImmSrcD;
 wire [31:0] RD1_D, RD2_D, ImmExtD;
 wire [4:0] regfile_a1, regfile_a2;
-// regfile_a3;
-
 
 reg ResultSrcD_r, MemWriteD_r, ALUSrcD_r, RegWriteD_r, PCSrcD_r;
 reg [2:0] ALUControlD_r;
@@ -72,11 +70,9 @@ control_unit ctrl_block (
 assign regfile_a1 = InstrD[19:15];
 assign regfile_a2 = InstrD[24:20];
 
-assign Rs1D_out = regfile_a1;
-assign Rs2D_out = regfile_a2;
+assign Rs1D_out = InstrD[19:15];
+assign Rs2D_out = InstrD[24:20];
 assign RdD_out = InstrD[11:7];
-
-//assign regfile_a3 = InstrD[11:7];
 
 register_file reg_file (
     .A1(regfile_a1), 
@@ -112,8 +108,8 @@ always @ (posedge clk or negedge rst) begin
         RdD_r <= 5'b00000;
         PCD_r <= 32'h00000000;
         PCPlus4D_r <= 32'h00000000;
-//        Rs1D_r <= 5'b00000;
-//        Rs2D_r <= 5'b00000;
+        Rs1D_r <= 5'b00000;
+        Rs2D_r <= 5'b00000;
     end
     else begin
         ResultSrcD_r <= ResultSrcD;
@@ -128,8 +124,8 @@ always @ (posedge clk or negedge rst) begin
         RdD_r <= InstrD[11:7];
         PCD_r <= PCD;
         PCPlus4D_r <= PCPlus4D;
-//        Rs1D_r <= regfile_a1;
-//        Rs2D_r <= regfile_a2; 
+        Rs1D_r <= InstrD[19:15];
+        Rs2D_r <= InstrD[24:20]; 
     end
 end
 
@@ -145,8 +141,8 @@ assign ImmExtE = ImmExtD_r;
 assign RdE = RdD_r;
 assign PCE = PCD;
 assign PCPlus4E = PCPlus4D;
-//assign Rs1E = Rs1D_r;
-//assign Rs2E = Rs2D_r;
+assign Rs1E = Rs1D_r;
+assign Rs2E = Rs2D_r;
 
 endmodule
 
@@ -358,9 +354,11 @@ output [31:0] RD1, RD2;
 
 reg [31:0] mem [31:0];
 
+// READ OPERATION
 assign RD1 = (RST == 1'b1) ? mem[A1] : 32'b00000000;
 assign RD2 = (RST == 1'b1) ? mem[A2] : 32'b00000000;
 
+// WRITE OPERATION
 always @(posedge CLK)
     begin
     if (WE3 == 1'b1)
@@ -371,12 +369,6 @@ always @(posedge CLK)
  
 initial begin
     mem [9] = 32'h00000020;
-    mem [6] = 32'h00000021;
-    mem [28] = 32'h00000022;
-    mem [8] = 32'h00000023;
-    mem [7] = 32'h00000024;
-    mem [4] = 32'h00000025;
-    mem [5] = 32'h00000025;
 end
 
 endmodule
