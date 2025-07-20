@@ -16,7 +16,7 @@ A five-stage pipelined architecture consisting of the stages:
 
 **WB**: Write Back
 
-#Architecture Diagrams
+# Architecture Diagrams
 
 Pipelined Architecture (Implemented and modified based on the single-cycle design)
 
